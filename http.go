@@ -12,13 +12,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/keti-openfx/openfx/cmd"
 	"github.com/keti-openfx/openfx/metrics"
 	"github.com/keti-openfx/openfx/pb"
 	"github.com/keti-openfx/openfx/pkg/ui/data/swagger"
 	assetfs "github.com/philips/go-bindata-assetfs"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 // allowCORS allows Cross Origin Resoruce Sharing from any origin.
@@ -59,31 +60,34 @@ func prepareHTTP(ctx context.Context, serverName string, functionNamespace strin
 
 	//// initialize grpc-gateway
 	// gRPC dialup options
-	opts := []grpc.DialOption{
-		// grpc.WithTimeout(10 * time.Second),
-		grpc.WithTimeout(10 * time.Second),
-		grpc.WithBlock(),
-		grpc.WithInsecure(),
-	}
+	// opts := []grpc.DialOption{
+	// 	// grpc.WithTimeout(10 * time.Second),
+	// 	//grpc.WithTimeout(10 * time.Second),
+	// 	grpc.WithBlock(),
+	// 	grpc.WithInsecure(),
+	// }
 
+	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 	// gRPC dialup options
 	// gRPC server에 대한 클라이언트 연결
+	/*
 	conn, err := grpc.Dial(serverName, opts...)
 	if err != nil {
 		log.Fatalf("fail to dial: %v", err)
 		return nil, err
 	}
+	*/
+	//conn := flag.String("endpoint", serverName, "endpoint")
 
 	// changes json serializer to include empty fields with default values
-	gwMux := runtime.NewServeMux(
-		runtime.WithMarshalerOption(runtime.MIMEWildcard, &runtime.JSONPb{OrigName: true, EmitDefaults: true}),
-		runtime.WithProtoErrorHandler(runtime.DefaultHTTPProtoErrorHandler),
-	)
+	gwMux := runtime.NewServeMux()
 
 	// Register Gateway endpoints
 	// FxGateway 서비스에 대한 http 핸들러를 mux에 등록
 	// 핸들러는 conn을 통해 grpc 엔드 포인트로 요청 전달
-	err = pb.RegisterFxGatewayHandler(ctx, gwMux, conn)
+	//err := pb.RegisterFxGatewayHandler(ctx, gwMux, *serverName)
+	err := pb.RegisterFxGatewayHandlerFromEndpoint(ctx, gwMux, serverName, opts)
+
 	if err != nil {
 		return nil, err
 	}

@@ -8,6 +8,7 @@ import (
 	"github.com/keti-openfx/openfx/pb"
 	"github.com/keti-openfx/openfx/cmd"
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"k8s.io/client-go/kubernetes"
 )
 
@@ -32,7 +33,7 @@ func RegisterExporter(exporter *Exporter) {
 
 // PrometheusHandler Bootstraps prometheus for metrics collection
 func PrometheusHandler() http.Handler {
-	return prometheus.Handler()
+	return promhttp.Handler()
 }
 
 // Describe is to describe the metrics for Prometheus

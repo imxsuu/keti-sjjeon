@@ -1,6 +1,5 @@
 registry=10.0.0.255:5000/openfx
 version=1.0
-go_version=1.16
 
 all: docker-build docker-push
 
@@ -13,7 +12,7 @@ build:
 	go build -o fxwatcher .
 
 docker-build:
-	docker build --network=host -t $(registry)/fxwatcher:$(version)-go --build-arg GO_VERSION=$(go_version) .
+	docker build --network=host -t $(registry)/fxwatcher:$(version)-go .
 
 docker-push:
 	docker push $(registry)/fxwatcher:$(version)-go

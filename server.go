@@ -31,6 +31,7 @@ type FxGateway struct {
 	metricsFetcher metrics.PrometheusQueryFetcher /* prometheus 클라이언트 */
 
 	events trace.EventLog
+	pb.UnimplementedFxGatewayServer
 }
 
 // FxGateway 생성
@@ -41,7 +42,7 @@ func NewFxGateway(c config.FxGatewayConfig, k *kubernetes.Clientset) *FxGateway 
 		metricsOptions: metrics.BuildMetricsOptions(),
 		metricsFetcher: metrics.NewPrometheusQuery(c.PrometheusHost, c.PrometheusPort, &http.Client{}),
 	}
-
+	fmt.Sprintln("new gateway created...")
 	if EnableTracing {
 		_, file, line, _ := runtime.Caller(1)
 		gw.events = trace.NewEventLog("FxGateway", fmt.Sprintf("%s:%d", file, line))
@@ -206,14 +207,14 @@ func (f *FxGateway) Start() error {
 	httpL := tcpMux.Match(cmux.HTTP1Fast())
 
 	// http/grpc server의 값, 시그널, cancelation, deadline 등을 전달하기 위해서 사용
-	ctx := context.Background()
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
 	// initialize gRPC server instance
 	// gRPC service 구현체인 FxGateway를 전달하여 gRPC server에 handler를 등록하고
 	// gRPC server 반환
-	f.grpcServer, err = prepareGRPC(ctx, f)
+	f.grpcServer, err = prepareGRPC(f)
 	if err != nil {
 		log.Fatalln("Unable to initialize gRPC server instance")
 		return err

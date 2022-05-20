@@ -1,5 +1,5 @@
 # Build fxwatcher
-FROM golang:1.16
+FROM golang:1.17
 
 ENV GO111MODULE=on
 

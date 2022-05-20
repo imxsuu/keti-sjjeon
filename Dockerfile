@@ -1,4 +1,4 @@
-FROM golang:1.16 as builder
+FROM golang:1.17 as builder
 
 RUN mkdir -p /go/src/github.com/keti-openfx/openfx
 
@@ -8,6 +8,7 @@ COPY . .
 
 ENV GO111MODULE=on
 
+RUN go mod download github.com/fsnotify/fsnotify
 RUN CGO_ENABLED=0 GOOS=linux go build --ldflags "-s -w" \
 	-a -installsuffix cgo -o fxgateway .
 

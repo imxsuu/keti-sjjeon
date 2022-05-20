@@ -2,23 +2,23 @@ all: fxwatcher fxgateway
 
 fxwatcher:
 	protoc -I . \
-			-I${GOPATH}/src/github.com/keti-openfx/openfx/pb \
-			--go_out=plugins=grpc:. \
-			fxwatcher.proto
+   	 	--go_out ./ --go_opt paths=source_relative \
+    		--go-grpc_out ./ --go-grpc_opt paths=source_relative \
+    		fxwatcher.proto
 
 fxgateway:
 	protoc -I . \
-				-I${GOPATH}/src/github.com/keti-openfx/openfx/pb \
-		-I${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
-		--go_out=plugins=grpc:. \
-		fxgateway.proto
+    		--go_out ./ --go_opt paths=source_relative \
+    		--go-grpc_out ./ --go-grpc_opt paths=source_relative \
+    		fxgateway.proto
 	
-	protoc -I . \
-				-I${GOPATH}/src/github.com/keti-openfx/openfx/pb \
-		-I${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
-		--grpc-gateway_out=logtostderr=true:. \
-		fxgateway.proto
+	protoc -I . --grpc-gateway_out ./ \
+    		--grpc-gateway_opt logtostderr=true \
+    		--grpc-gateway_opt paths=source_relative \
+    		--grpc-gateway_opt generate_unbound_methods=true \
+ 		fxgateway.proto
 	
+swagger:
 	protoc -I . \
 				-I${GOPATH}/src/github.com/keti-openfx/openfx/pb \
 		-I${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \

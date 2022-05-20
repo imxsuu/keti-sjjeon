@@ -34,6 +34,32 @@ const (
         ]
       }
     },
+    "/system/crd": {
+      "post": {
+        "operationId": "Create",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/pbMessage"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbCreateCRDRequest"
+            }
+          }
+        ],
+        "tags": [
+          "FxGateway"
+        ]
+      }
+    },
     "/system/function-log/{FunctionName}": {
       "get": {
         "operationId": "GetLog",
@@ -212,6 +238,56 @@ const (
     }
   },
   "definitions": {
+    "pbCRDNames": {
+      "type": "object",
+      "properties": {
+        "Plural": {
+          "type": "string"
+        },
+        "Singular": {
+          "type": "string"
+        },
+        "Kind": {
+          "type": "string"
+        }
+      }
+    },
+    "pbCRDVersions": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "Served": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "Storage": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "OpenAPIV3Schema": {
+          "$ref": "#/definitions/pbOpenAPIV3Schema"
+        }
+      }
+    },
+    "pbCreateCRDRequest": {
+      "type": "object",
+      "properties": {
+        "Group": {
+          "type": "string"
+        },
+        "Scope": {
+          "type": "string"
+        },
+        "Versions": {
+          "$ref": "#/definitions/pbCRDVersions"
+        },
+        "Names": {
+          "$ref": "#/definitions/pbCRDNames"
+        }
+      }
+    },
     "pbCreateFunctionRequest": {
       "type": "object",
       "properties": {
@@ -267,6 +343,9 @@ const (
         "MaxReplicas": {
           "type": "integer",
           "format": "int32"
+        },
+        "NodeName": {
+          "type": "string"
         }
       }
     },
@@ -334,6 +413,14 @@ const (
       "type": "object",
       "properties": {
         "Msg": {
+          "type": "string"
+        }
+      }
+    },
+    "pbOpenAPIV3Schema": {
+      "type": "object",
+      "properties": {
+        "Type": {
           "type": "string"
         }
       }

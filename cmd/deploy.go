@@ -15,8 +15,6 @@ import (
 	"google.golang.org/grpc/status"
 	v1 "k8s.io/api/apps/v1"
 	apiv1 "k8s.io/api/core/v1"
-
-	//v1beta1 "k8s.io/api/extensions/v1beta1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
@@ -142,7 +140,7 @@ func makeDeploymentSpec(req *pb.CreateFunctionRequest, existingSecrets map[strin
 	envVars := buildEnvVars(req)
 	path := filepath.Join(os.TempDir(), ".lock")
 	probe := &apiv1.Probe{
-		Handler: apiv1.Handler{
+		ProbeHandler: apiv1.ProbeHandler{
 			Exec: &apiv1.ExecAction{
 				Command: []string{"cat", path},
 			},
@@ -155,7 +153,7 @@ func makeDeploymentSpec(req *pb.CreateFunctionRequest, existingSecrets map[strin
 	}
 	if config.EnableHttpProbe {
 		probe = &apiv1.Probe{
-			Handler: apiv1.Handler{
+			ProbeHandler: apiv1.ProbeHandler{
 				HTTPGet: &apiv1.HTTPGetAction{
 					Path: "/health",
 					Port: intstr.IntOrString{
@@ -518,7 +516,7 @@ func createResources(req *pb.CreateFunctionRequest) (*apiv1.ResourceRequirements
 			}
 			resources.Limits[apiv1.ResourceCPU] = qty
 		}
-		// Set Gpu limits
+		// Set GPU limits
 		if req.Limits != nil && len(req.Limits.GPU) > 0 {
 			qty, err := resource.ParseQuantity(req.Limits.GPU)
 			if err != nil {
