@@ -15,6 +15,7 @@ podTemplate(label: 'podman-argocd',
     ),
   ],
 ) {
+     node{ 
         stage('Checkout'){
             container('podman'){
                 checkout scm
@@ -71,5 +72,6 @@ podTemplate(label: 'podman-argocd',
                     """)
                 }
             }
+        }
     } 
 }
