@@ -58,7 +58,7 @@ podTemplate(label: 'podman-argocd',
                         branches: [[name: '*/develop' ]],
                         extensions: scm.extensions,
                         userRemoteConfigs: [[
-                            url: 'https://github.com/ketiops/openfx.git',
+                            url: 'http://github.com/ketiops/openfx.git',
                             credentialsId: 'jenkins_agent_ssh',
                         ]]
                 ])
@@ -70,8 +70,6 @@ podTemplate(label: 'podman-argocd',
                         git config --global user.email "imxsuu@gmail.com"
                         git checkout develop
                         cd overlay/dev && kustomize edit set image 10.0.1.150:5000/openfx/openfx-gateway:${BUILD_NUMBER}
-                        # sed -i 's/argocd-deploy:.*\$/argocd-deploy:${currentBuild.number}/g' deployment.yaml
-                        # git add deployment.yaml
                         git commit -a -m "[UPDATE] change the image versioning ${currentBuild.number}"
                         git push
                     """)
