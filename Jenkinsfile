@@ -59,10 +59,10 @@ podTemplate(label: 'podman-argocd',
                         extensions: scm.extensions,
                         userRemoteConfigs: [[
                             url: 'http://root:ketilinux@10.0.2.121:80/ketiops/manifest.git',
-                            credentialsId: 'jenkins-ssh',
+                            credentialsId: 'jenkins_agent_ssh',
                         ]]
                 ])
-                sshagent(credentials: ['jenkins-ssh']){
+                sshagent(credentials: ['jenkins_agent_ssh']){
                     sh("""
                         #!/usr/bin/env bash
                         set +x
