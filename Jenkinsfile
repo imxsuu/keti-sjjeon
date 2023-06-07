@@ -58,7 +58,7 @@ podTemplate(label: 'podman-argocd',
                         branches: [[name: '*/develop' ]],
                         extensions: scm.extensions,
                         userRemoteConfigs: [[
-                            url: 'http://github.com/ketiops/openfx.git',
+                            url: 'https://imxsuu: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@github.com/ketiops/openfx.git',
                             credentialsId: 'github-access-token',
                         ]]
                 ])
