@@ -29,7 +29,7 @@ podTemplate(label: 'podman-argocd',
                     #!/bin/sh
 
                     # Construct Image Name
-                    IMAGE=10.0.1.150:5000/sjjeon/argocd-deploy:${env.BUILD_NUMBER}
+                    IMAGE=10.0.1.150:5000/openfx/openfx-gateway:${env.BUILD_NUMBER}
                     
                     podman build -t \${IMAGE} .
                 """)
@@ -42,7 +42,7 @@ podTemplate(label: 'podman-argocd',
                     #!/bin/sh
 
                     # Construct Image Name
-                    IMAGE=10.0.1.150:5000/sjjeon/argocd-deploy:${env.BUILD_NUMBER}
+                    IMAGE=10.0.1.150:5000/openfx/openfx-gateway:${env.BUILD_NUMBER}
                    
                     podman login -u admin -p Ketilinux11 10.0.1.150:5000 --tls-verify=false
 
@@ -67,9 +67,9 @@ podTemplate(label: 'podman-argocd',
                         #!/usr/bin/env bash
                         set +x
                         export GIT_SSH_COMMAND="ssh -oStrictHostKeyChecking=no"
-                        git config --global user.email "admin@example.com"
+                        git config --global user.email "imxsuu@gmail.com"
                         git checkout develop
-                        cd overlay/dev && kustomize edit set image 10.0.1.150:5000/sjjeon/argocd-deploy:${BUILD_NUMBER}
+                        cd overlay/dev && kustomize edit set image 10.0.1.150:5000/openfx/openfx-gateway:${BUILD_NUMBER}
                         # sed -i 's/argocd-deploy:.*\$/argocd-deploy:${currentBuild.number}/g' deployment.yaml
                         # git add deployment.yaml
                         git commit -a -m "[UPDATE] change the image versioning ${currentBuild.number}"
