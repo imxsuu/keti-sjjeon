@@ -16,7 +16,7 @@ spec:
       serviceAccountName: fxgateway
       containers:
       - name: fxgateway
-        image: 10.0.1.150:5000/openfx/fxgateway:1.0
+        image: 10.0.1.150:5000/openfx/openfx-gateway:1.0
         imagePullPolicy: Always
         env:
         - name: FUNCTION_NAMESPACE
