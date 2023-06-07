@@ -59,7 +59,7 @@ podTemplate(label: 'podman-argocd',
                         extensions: scm.extensions,
                         userRemoteConfigs: [[
                             url: 'http://github.com/ketiops/openfx.git',
-                            credentialsId: 'jenkins_agent_ssh',
+                            credentialsId: 'github-access-token',
                         ]]
                 ])
                 sshagent(credentials: ['jenkins_agent_ssh']){
