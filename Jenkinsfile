@@ -55,10 +55,10 @@ podTemplate(label: 'podman-argocd',
         stage('Deploy'){
             container('argocd'){
                 checkout([$class: 'GitSCM',
-                        branches: [[name: '*/develop' ]],
+                        branches: [[name: '*/main' ]],
                         extensions: scm.extensions,
                         userRemoteConfigs: [[
-                            url: 'https://imxsuu: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@github.com/ketiops/openfx.git',
+                            url: 'https://imxsuu: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@github.com/ketiops/manifest.git',
                             credentialsId: 'github-access-token',
                         ]]
                 ])
