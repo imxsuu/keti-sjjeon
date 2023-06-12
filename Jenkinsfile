@@ -69,7 +69,7 @@ podTemplate(label: 'podman-argocd',
                         export GIT_SSH_COMMAND="ssh -oStrictHostKeyChecking=no"
                         git config --global user.email "imxsuu@gmail.com"
                         git checkout develop
-                        cd overlay/dev && kustomize edit set image 10.0.1.150:5000/openfx/openfx-gateway:${BUILD_NUMBER}
+                        cd openfx/overlay/dev && kustomize edit set image 10.0.1.150:5000/openfx/openfx-gateway:${BUILD_NUMBER}
                         git commit -a -m "[UPDATE] change the image versioning ${currentBuild.number}"
                         git push
                     """)
