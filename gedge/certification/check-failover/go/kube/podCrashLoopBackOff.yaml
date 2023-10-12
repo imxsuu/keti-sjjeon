@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gedge-service-application
+spec:
+  containers:
+    - name: app
+      image: ubuntu:latest
+      command: ["echo"]
+      args: ["streamlit run app.py"]
+    - name: nginx
+      image: nginx:latest

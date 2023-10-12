@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gedge-data-application
+  namespace: gedge-platform
+  labels:
+    run: gedge-data-application
+spec:
+  restartPolicy: Never
+  imagePullSecrets:
+     - name: regcred
+  containers:
+    - name: gedge-data-application
+      image: imxsuu/gedge:gedge 
+      resources:
+        limits:
+          memory: "100Mi"
+        requests:
+          memory: "100Mi"
+      imagePullPolicy: Always
+      ports:
+        - containerPort: 9010
+          protocol: TCP
+
+

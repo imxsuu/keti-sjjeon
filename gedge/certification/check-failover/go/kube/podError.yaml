@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gedge-handler-application
+  namespace: gedge-platform
+  labels:
+    run: gedge-handler-application
+spec:
+  restartPolicy: Never
+  imagePullSecrets:
+     - name: regcred
+  nodeName: gedgemaster
+  containers:
+    - name: gedge-handler-application
+      image: imxsuu/gedge:gedge-handler-app
+      resources:
+        limits:
+          memory: "100Mi"
+        requests:
+          memory: "100Mi"
+      imagePullPolicy: Always
+      ports:
+        - containerPort: 9010
+          protocol: TCP
+
+
+
