@@ -1,0 +1,101 @@
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: prometheus-restore
+rules:
+- apiGroups: [""]
+  resources:
+  - nodes
+  - services
+  - endpoints
+  - pods
+  - nodes/stats
+  - nodes/metrics
+  - nodes/log
+  - nodes/spec
+  - nodes/proxy
+  verbs: ["get", "list", "watch"]
+- apiGroups:
+  - extensions
+  resources:
+  - ingresses
+  verbs: ["get", "list", "watch"]
+- nonResourceURLs: ["/metrics"]
+  verbs: ["get"]
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus-restore
+  namespace: restoring
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: prometheus-restore
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus-restore
+subjects:
+- kind: ServiceAccount
+  name: prometheus-restore
+  namespace: restoring
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus-restore
+  namespace: restoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus-restore
+  template:
+    metadata:
+      labels:
+        app: prometheus-restore
+    spec:
+      containers:
+      - name: prometheus
+        image: prom/prometheus:latest
+        command:
+          - "prometheus"
+          - "--config.file=/etc/prometheus/prometheus.yml"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9090
+          protocol: TCP
+        resources:
+          requests:
+            memory: 512Mi
+          limits:
+            memory: 512Mi
+        volumeMounts:
+        - mountPath: /prometheus/data 
+          name: prometheus-restore-data
+      volumes:
+        - name: prometheus-restore-data
+          hostPath:
+            path: /data/prometheus-restore-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-restore
+  namespace: restoring
+  annotations:
+    prometheus.io/scrape: 'true'
+    prometheus.io/port: '9090'
+  labels:
+    app: prometheus-restore
+spec:
+  type: NodePort
+  ports:
+    - port: 9090
+      protocol: TCP
+      targetPort: 9090
+      nodePort: 31312
+  selector:
+    app: prometheus-restore
