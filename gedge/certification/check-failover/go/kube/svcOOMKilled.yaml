@@ -11,7 +11,7 @@ spec:
   - port: 9010
     targetPort: 9010
     name: http
-    nodePort: 32225
+    nodePort: 31115
     protocol: TCP
   # - port: 443
   #   name: https
